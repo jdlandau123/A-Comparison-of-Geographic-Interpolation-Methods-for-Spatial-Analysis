@@ -1,17 +1,7 @@
-
-# coding: utf-8
-
-# In[11]:
-
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd 
 import shapely.geometry
-
-
-# In[2]:
-
 
 # add data
 supermarkets_csv = pd.read_csv( # path to  supermarkets.csv )
@@ -19,10 +9,6 @@ land_use = gpd.read_file( # path to land_use.shp )
 demographics_csv = pd.read_csv ( # path to demographics.csv )
 census_tracts = gpd.read_file( # path to orange_county_census_tracts.shp )
 market_areas = gpd.read_file( # path to market_areas.shp )
-
-
-# In[3]:
-
 
 # clean up demographics table columns
 demographics_df = pd.read_csv(demographics_csv)
@@ -37,16 +23,10 @@ demographics_df.drop(labels=["B01003_001M", "B11016_001M", "B19025_001M", "state
 	axis=1, inplace=True)
 
 
-# In[4]:
-
-
 # join demographics data to census tracts
 demographics_df["TRACT"] = demographics_df["TRACT"].astype(int)
 census_tracts["TRACT"] = census_tracts["TRACT"].astype(int)
 tracts_final = census_tracts.merge(demographics_df, on="TRACT")
-
-
-# In[5]:
 
 
 # project shapefiles to same coordinate reference system
@@ -56,9 +36,7 @@ land_use_wgs = land_use.to_crs(crs)
 census_tracts_wgs = tracts_final.to_crs(crs)
 market_areas_wgs = market_areas.to_crs(crs)
 
-
-# In[6]:
-
+	
 
 '''  CHANGE IN WORKFLOW - THIS STEP WAS NO LONGER NECESSARY
 # create supermarket points
@@ -67,16 +45,9 @@ supermarket_pts = gpd.GeoDataFrame(supermarkets_csv,
 	crs=crs)
 '''
 
-
-# In[7]:
-
-
 # compute area of each census tract and market area
 census_tracts_wgs["area(m)_tracts"] = census_tracts_wgs["geometry"].area
 market_areas_wgs["area(m)_markets"] = market_areas_wgs["geometry"].area
-
-
-# In[8]:
 
 
 # AREA WEIGHTED INTERPOLATION
@@ -97,10 +68,7 @@ cross_dissolve = cross.dissolve(by='TRACT', aggfunc='sum')
 # calculate average household income
 cross_dissolve["avg_hh_income_aw"] = cross_dissolve["income_cross"] / cross_dissolve["hh_cross"]
 
-
-# In[9]:
-
-
+	
 # ANCILLARY WEIGHTED INTERPOLATION
 
 # calculate total area of residential land parcels in each census tract
@@ -129,8 +97,6 @@ ancillary_final["income_anc"] = ancillary_final["AggHHIncome_1"] * ancillary_fin
 # calculate average household income
 ancillary_final["avg_hh_income_anc"] = ancillary_final["income_anc"] / ancillary_final["hh_anc"]
 
-
-# In[ ]:
 
 
 # write results to a shapefile
