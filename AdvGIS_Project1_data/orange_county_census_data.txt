@@ -1,0 +1,27 @@
+Census CSV metadata
+
+-Pulled from the Census API using cenpy python package
+-2011-2015 American Community Survey
+-Orange County, Florida
+
+Data columns
+
+B01003_001E total population estimate
+
+B01003_001M total population margin of error
+
+B11016_001E total households estimate
+
+B11016_001M total households margin of error
+
+B19025_001E aggregate household income estimate
+
+B19025_001M aggregate household income margin of error
+
+------------------
+Census SHP metadata
+
+-Pulled from the Census API using cenpy python package
+-Orange County, Florida
+-epsg:3857
+
